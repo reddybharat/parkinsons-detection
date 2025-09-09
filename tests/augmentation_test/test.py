@@ -5,11 +5,13 @@ from skimage import io, img_as_ubyte
 
 # Ensure src/utils is in the path for import
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src/utils')))
-from augmentation import random_rotation, random_noise, horizontal_flip
+from src.utils.augmentation import random_rotation, random_noise, horizontal_flip
 
+# Define project root
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 # Path to a sample image (update this path as needed)
-sample_image_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../data/raw/dataset_1/spiral/testing/healthy/V01HE01.png'))
-output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../test_outputs'))
+sample_image_path = os.path.join(project_root, 'data', 'raw', 'dataset_1', 'spiral', 'testing', 'healthy', 'V01HE01.png')
+output_dir = os.path.join(project_root, 'tests', 'augmentation_test', 'output_images')
 
 # Clear the output directory if it exists
 if os.path.exists(output_dir):
