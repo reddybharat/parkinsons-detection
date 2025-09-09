@@ -1,2 +1,1 @@
-# parkinsons-detection
-ML Model to detect Parkinson's Disease from Hand Drawn Images
+# Parkinson's Disease Detection from Hand-drawn Images
