@@ -1,0 +1,14 @@
+{
+  "model_LinearSVM.pkl": {
+    "accuracy": 0.7,
+    "precision": 0.7000555709919423,
+    "recall": 0.7,
+    "f1-score": 0.699979165219807
+  },
+  "model_RandomForest.pkl": {
+    "accuracy": 0.6708333333333333,
+    "precision": 0.6708451975831655,
+    "recall": 0.6708333333333333,
+    "f1-score": 0.670827618535044
+  }
+}
