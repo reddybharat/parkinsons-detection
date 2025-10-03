@@ -1,7 +1,7 @@
-import cv2
 import os
 import numpy as np
 from src.features.hog_filter import HogFilter
+from imutils import paths
 
 class TestTrainSplit:
     def __init__(self):
@@ -11,6 +11,7 @@ class TestTrainSplit:
         # grab the list of images in the input directory, then initialize
         # the list of data (i.e., images) and class labels
         imagePaths = list(paths.list_images(path))
+        print(f"[DEBUG] Found {len(imagePaths)} images in {path}")
         data = []
         labels = []
 
@@ -25,7 +26,7 @@ class TestTrainSplit:
             label = imagePath.split(os.path.sep)[-2]
 
             # quantify the image
-            features = HogFilter().quantify_image(image)
+            features = HogFilter().quantify_image(imagePath)
 
             # update the data and labels lists, respectively
             data.append(features)

@@ -9,4 +9,5 @@ seaborn
 scikit-learn
 kaggle
 
-cv2
+opencv-python
+imutils

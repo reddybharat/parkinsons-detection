@@ -15,11 +15,13 @@ class HogFilter:
 
     def quantify_image(self, image_path):
         image = cv2.imread(image_path)
+        if image is None:
+            print(f"[ERROR] Failed to load image: {image_path}")
+            return None
         image = self.preprocess_image(image)
         # compute the histogram of oriented gradients feature vector for the input image
-        features = feature.hog(image, orientations=9,
+        features, _ = feature.hog(image, orientations=9,
             pixels_per_cell=(10, 10), cells_per_block=(2, 2),
             transform_sqrt=True, block_norm="L1", visualize=True)
         # return the feature vector
-        print(f"Number of features: {len(features)}")
         return features
