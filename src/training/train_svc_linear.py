@@ -1,13 +1,13 @@
 import os
 import joblib
 import json
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import SVC
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import classification_report
-from src.data.test_train_split import TestTrainSplit
+from src.preprocessing.test_train_split import TestTrainSplit
 from src.utils.metrics_saver import save_model_metrics
 
-class TrainRandomForest:
+class TrainSVCLinear:
     def __init__(self):
         self.le = LabelEncoder()
 
@@ -34,12 +34,12 @@ class TrainRandomForest:
         trainY = self.le.fit_transform(trainY)
         testY = self.le.transform(testY)
 
-        print("[INFO] Training RandomForestClassifier...")
-        classifier = RandomForestClassifier(n_estimators=100, random_state=42)
+        print("[INFO] Training SVC (Linear)...")
+        classifier = SVC(kernel="linear", C=0.025, random_state=42)
         classifier.fit(trainX, trainY)
 
         # Save the trained model and label encoder
-        model_path = os.path.join("models", "model_RandomForest.pkl")
+        model_path = os.path.join("models", "model_LinearSVM.pkl")
         to_save = {
             "classifier": classifier,
             "label_encoder": self.le
@@ -61,5 +61,5 @@ class TrainRandomForest:
         save_model_metrics(model_path, metrics)
 
 if __name__ == "__main__":
-    trainer = TrainRandomForest()
+    trainer = TrainSVCLinear()
     trainer.train()

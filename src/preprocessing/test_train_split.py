@@ -1,6 +1,6 @@
 import os
 import numpy as np
-from src.features.hog_filter import HogFilter
+from src.preprocessing.hog_filter import HogFilter
 from imutils import paths
 
 class TestTrainSplit:
