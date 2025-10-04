@@ -11,3 +11,8 @@ kaggle
 
 opencv-python
 imutils
+
+fastapi
+streamlit
+requests
+pillow
