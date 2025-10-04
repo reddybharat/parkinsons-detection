@@ -1,8 +1,11 @@
 import os
 import joblib
+import json
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import classification_report
 from src.preprocessing.test_train_split import TestTrainSplit
+from src.utils.metrics_saver import save_model_metrics
 
 class TrainRandomForest:
     def __init__(self):
@@ -39,14 +42,14 @@ class TrainRandomForest:
         predictions = classifier.predict(testX)
         report = classification_report(testY, predictions, target_names=self.le.classes_, output_dict=True)
         print(json.dumps(report, indent=2))
+        display_name = "Random Forest"
         metrics = {
             "accuracy": report["accuracy"],
             "precision": report["weighted avg"]["precision"],
             "recall": report["weighted avg"]["recall"],
             "f1-score": report["weighted avg"]["f1-score"]
         }
-        # Save metrics using utility
-        save_model_metrics(model_path, metrics)
+        save_model_metrics(display_name, metrics, model_path)
 
 if __name__ == "__main__":
     trainer = TrainRandomForest()

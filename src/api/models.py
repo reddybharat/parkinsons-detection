@@ -7,6 +7,7 @@ class ModelMetrics(BaseModel):
     precision: float
     recall: float
     f1_score: Optional[float] = None
+    name: Optional[str] = None
 
 class ModelsResponse(BaseModel):
     """Response model for listing available models and their metrics."""

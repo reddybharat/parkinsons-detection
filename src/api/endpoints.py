@@ -29,29 +29,28 @@ except Exception as e:
 
 router = APIRouter()
 
-@router.get("/models", response_model=ModelsResponse, tags=["Models"])
+@router.get("/models", tags=["Models"])
 def get_models():
     """List available models and their metrics."""
     if not METRICS:
         logger.error("No metrics found.")
         raise HTTPException(status_code=500, detail="Model metrics not available.")
-    # Convert keys for Pydantic compatibility
-    metrics_out = {k: {**v, 'f1_score': v.get('f1-score', None)} for k, v in METRICS.items()}
-    return {"models": metrics_out}
+    return {"models": METRICS}
 
 @router.post("/predict", response_model=PredictionResponse, tags=["Prediction"])
 def predict(
     file: UploadFile = File(..., description="Image file (PNG/JPG)"),
-    model_name: str = Form(..., description="Model file name, e.g. model_LinearSVM.pkl")
+    model_name: str = Form(..., description="Model display name, e.g. Linear SVM")
 ):
     """Predict Parkinson's from an uploaded image using the selected model."""
     logger.info(f"Received prediction request: file={file.filename}, model_name={model_name}")
     # Validate model name
-    if model_name not in AVAILABLE_MODELS:
+    if model_name not in METRICS:
         logger.warning(f"Invalid model requested: {model_name}")
-        raise HTTPException(status_code=400, detail=f"Invalid model_name. Choose from: {AVAILABLE_MODELS}")
+        raise HTTPException(status_code=400, detail=f"Invalid model_name. Choose from: {list(METRICS.keys())}")
+    pickle_file = METRICS[model_name]["pickle_file"]
     # Validate file type (case-insensitive)
-    if not file.filename.lower().endswith(('.png', '.jpg', '.jpeg')):
+    if not file.filename.lower().endswith((".png", ".jpg", ".jpeg")):
         logger.warning(f"Invalid file type: {file.filename}")
         raise HTTPException(status_code=400, detail="Only PNG and JPG images are supported.")
     # Save uploaded file securely
@@ -73,11 +72,11 @@ def predict(
             logger.error(f"Uploaded file is not a valid image: {pil_err}")
             raise HTTPException(status_code=400, detail="Uploaded file is not a valid image.")
         # Run prediction
-        logger.info(f"Running prediction using model: {model_name}")
-        predictor = Predict(model_name=model_name.replace("model_", "").replace(".pkl", ""))
+        logger.info(f"Running prediction using model: {pickle_file}")
+        predictor = Predict(model_name=pickle_file.replace("model_", "").replace(".pkl", ""))
         result = predictor.predict_from_image(temp_path)
         prediction = result[0].capitalize()
-        logger.info(f"Prediction successful for {file.filename} with model {model_name}: {prediction}")
+        logger.info(f"Prediction successful for {file.filename} with model {pickle_file}: {prediction}")
         return {"prediction": prediction}
     except Exception as e:
         logger.error(f"Prediction failed: {e}")

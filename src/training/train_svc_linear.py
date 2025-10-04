@@ -1,8 +1,11 @@
 import os
 import joblib
+import json
 from sklearn.svm import SVC
 from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import classification_report
 from src.preprocessing.test_train_split import TestTrainSplit
+from src.utils.metrics_saver import save_model_metrics
 
 class TrainSVCLinear:
     def __init__(self):
@@ -36,8 +39,16 @@ class TrainSVCLinear:
 
         print("[INFO] evaluating model...")
         predictions = classifier.predict(testX)
-        accuracy = (predictions == testY).mean()
-        print(f"Accuracy: {accuracy:.4f}")
+        report = classification_report(testY, predictions, target_names=self.le.classes_, output_dict=True)
+        print(json.dumps(report, indent=2))
+        display_name = "Linear SVM"
+        metrics = {
+            "accuracy": report["accuracy"],
+            "precision": report["weighted avg"]["precision"],
+            "recall": report["weighted avg"]["recall"],
+            "f1-score": report["weighted avg"]["f1-score"]
+        }
+        save_model_metrics(display_name, metrics, model_path)
 
 if __name__ == "__main__":
     trainer = TrainSVCLinear()
