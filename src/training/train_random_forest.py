@@ -1,11 +1,8 @@
 import os
 import joblib
-import json
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import LabelEncoder
-from sklearn.metrics import classification_report
 from src.preprocessing.test_train_split import TestTrainSplit
-from src.utils.metrics_saver import save_model_metrics
 
 class TrainRandomForest:
     def __init__(self):
@@ -21,20 +18,11 @@ class TrainRandomForest:
         trainingPath = os.path.sep.join([dataset, "training"])
         testingPath = os.path.sep.join([dataset, "testing"])
 
-        print(f"[DEBUG] Looking for images in: {trainingPath}")
-        print(f"[DEBUG] Looking for images in: {testingPath}")
-
-        print("[INFO] loading data...")
         (trainX, trainY) = TestTrainSplit().load_split_data(trainingPath)
-        print(f"[DEBUG] trainX shape: {trainX.shape}, dtype: {trainX.dtype}")
-        print(f"[DEBUG] trainY shape: {trainY.shape}, dtype: {trainY.dtype}, classes: {set(trainY)}")
         (testX, testY) = TestTrainSplit().load_split_data(testingPath)
-        print(f"[DEBUG] testX shape: {testX.shape}, dtype: {testX.dtype}")
-        print(f"[DEBUG] testY shape: {testY.shape}, dtype: {testY.dtype}, classes: {set(testY)}")
         trainY = self.le.fit_transform(trainY)
         testY = self.le.transform(testY)
 
-        print("[INFO] Training RandomForestClassifier...")
         classifier = RandomForestClassifier(n_estimators=100, random_state=42)
         classifier.fit(trainX, trainY)
 

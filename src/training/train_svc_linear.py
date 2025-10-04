@@ -1,11 +1,8 @@
 import os
 import joblib
-import json
 from sklearn.svm import SVC
 from sklearn.preprocessing import LabelEncoder
-from sklearn.metrics import classification_report
 from src.preprocessing.test_train_split import TestTrainSplit
-from src.utils.metrics_saver import save_model_metrics
 
 class TrainSVCLinear:
     def __init__(self):
@@ -21,20 +18,11 @@ class TrainSVCLinear:
         trainingPath = os.path.sep.join([dataset, "training"])
         testingPath = os.path.sep.join([dataset, "testing"])
 
-        print(f"[DEBUG] Looking for images in: {trainingPath}")
-        print(f"[DEBUG] Looking for images in: {testingPath}")
-
-        print("[INFO] loading data...")
         (trainX, trainY) = TestTrainSplit().load_split_data(trainingPath)
-        print(f"[DEBUG] trainX shape: {trainX.shape}, dtype: {trainX.dtype}")
-        print(f"[DEBUG] trainY shape: {trainY.shape}, dtype: {trainY.dtype}, classes: {set(trainY)}")
         (testX, testY) = TestTrainSplit().load_split_data(testingPath)
-        print(f"[DEBUG] testX shape: {testX.shape}, dtype: {testX.dtype}")
-        print(f"[DEBUG] testY shape: {testY.shape}, dtype: {testY.dtype}, classes: {set(testY)}")
         trainY = self.le.fit_transform(trainY)
         testY = self.le.transform(testY)
 
-        print("[INFO] Training SVC (Linear)...")
         classifier = SVC(kernel="linear", C=0.025, random_state=42)
         classifier.fit(trainX, trainY)
 
@@ -45,20 +33,11 @@ class TrainSVCLinear:
             "label_encoder": self.le
         }
         joblib.dump(to_save, model_path)
-        print(f"[INFO] Model and label encoder saved to {model_path}")
 
         print("[INFO] evaluating model...")
         predictions = classifier.predict(testX)
-        report = classification_report(testY, predictions, target_names=self.le.classes_, output_dict=True)
-        print(json.dumps(report, indent=2))
-        metrics = {
-            "accuracy": report["accuracy"],
-            "precision": report["weighted avg"]["precision"],
-            "recall": report["weighted avg"]["recall"],
-            "f1-score": report["weighted avg"]["f1-score"]
-        }
-        # Save metrics using utility
-        save_model_metrics(model_path, metrics)
+        accuracy = (predictions == testY).mean()
+        print(f"Accuracy: {accuracy:.4f}")
 
 if __name__ == "__main__":
     trainer = TrainSVCLinear()

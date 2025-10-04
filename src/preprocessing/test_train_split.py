@@ -11,7 +11,6 @@ class TestTrainSplit:
         # grab the list of images in the input directory, then initialize
         # the list of data (i.e., images) and class labels
         imagePaths = list(paths.list_images(path))
-        print(f"[DEBUG] Found {len(imagePaths)} images in {path}")
         data = []
         labels = []
 

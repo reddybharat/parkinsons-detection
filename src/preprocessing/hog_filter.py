@@ -1,4 +1,4 @@
-from skimage import feature, exposure
+from skimage import feature
 import cv2
 
 class HogFilter:
@@ -14,17 +14,12 @@ class HogFilter:
 
     def quantify_image(self, image_path):
         image = cv2.imread(image_path)
-        print(f"[DEBUG] cv2.imread('{image_path}') returned: {type(image)}")
         if image is None:
-            print(f"[ERROR] Failed to load image: {image_path}")
             return None
-        print(f"[DEBUG] Original image shape: {image.shape}")
         image = self.preprocess_image(image)
-        print(f"[DEBUG] Preprocessed image shape: {image.shape}, dtype: {image.dtype}")
         # compute the histogram of oriented gradients feature vector for the input image
         features, _ = feature.hog(image, orientations=9,
             pixels_per_cell=(10, 10), cells_per_block=(2, 2),
             transform_sqrt=True, block_norm="L1", visualize=True)
-        print(f"[DEBUG] HOG features shape: {features.shape}")
         # return the feature vector
         return features
