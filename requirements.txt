@@ -4,15 +4,17 @@ scipy
 scikit-image
 
 matplotlib
-seaborn
 
 scikit-learn
 kaggle
 
 opencv-python
-imutils
 
 fastapi
 streamlit
 requests
 pillow
+uvicorn
+
+# docker image requirements
+python-multipart

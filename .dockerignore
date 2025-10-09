@@ -1,0 +1,34 @@
+# Ignore Python cache & build artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+*.sqlite3
+*.db
+
+# Ignore local virtual environment
+venv/
+.env/
+
+# Ignore system and IDE files
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# Ignore Git and metadata
+.git/
+.gitignore
+
+# Ignore large data/model folders
+data/
+notebooks/
+tests/
+
+# Ignore temporary or build files
+*.tmp
+*.bak
+*.zip
+*.tar
+*.gz
